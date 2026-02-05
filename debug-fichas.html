@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Fichas</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        button { margin: 5px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Debug - Funciones de Fichas</h1>
+    
+    <div class="test-section">
+        <h2>1. Verificar Funciones Globales</h2>
+        <div id="global-functions-test"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Verificar Elementos del DOM</h2>
+        <div id="dom-elements-test"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Probar Funciones Básicas</h2>
+        <button onclick="testOpenAddModal()">Probar Abrir Modal</button>
+        <button onclick="testLoadSampleData()">Cargar Datos de Ejemplo</button>
+        <button onclick="testRenderTable()">Renderizar Tabla</button>
+        <div id="function-tests"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Verificar LocalStorage</h2>
+        <button onclick="testLocalStorage()">Probar LocalStorage</button>
+        <div id="localstorage-test"></div>
+    </div>
+
+    <!-- Elementos necesarios para las pruebas -->
+    <div style="display: none;">
+        <div id="modal-overlay"></div>
+        <div id="fichas-tbody"></div>
+        <div id="fichas-activas">0</div>
+        <div id="fichas-inactivas">0</div>
+        <div id="total-instructores">0</div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Funciones de prueba
+        function testOpenAddModal() {
+            const result = document.getElementById('function-tests');
+            try {
+                if (typeof openAddModal === 'function') {
+                    result.innerHTML += '<p class="success">✅ openAddModal existe y es una función</p>';
+                } else {
+                    result.innerHTML += '<p class="error">❌ openAddModal no está definida</p>';
+                }
+            } catch (error) {
+                result.innerHTML += `<p class="error">❌ Error al probar openAddModal: ${error.message}</p>`;
+            }
+        }
+        
+        function testLoadSampleData() {
+            const result = document.getElementById('function-tests');
+            try {
+                if (typeof loadSampleData === 'function') {
+                    loadSampleData();
+                    result.innerHTML += '<p class="success">✅ loadSampleData ejecutada correctamente</p>';
+                    result.innerHTML += `<p>Fichas cargadas: ${fichas.length}</p>`;
+                } else {
+                    result.innerHTML += '<p class="error">❌ loadSampleData no está definida</p>';
+                }
+            } catch (error) {
+                result.innerHTML += `<p class="error">❌ Error al ejecutar loadSampleData: ${error.message}</p>`;
+            }
+        }
+        
+        function testRenderTable() {
+            const result = document.getElementById('function-tests');
+            try {
+                if (typeof renderTable === 'function') {
+                    renderTable();
+                    result.innerHTML += '<p class="success">✅ renderTable ejecutada correctamente</p>';
+                } else {
+                    result.innerHTML += '<p class="error">❌ renderTable no está definida</p>';
+                }
+            } catch (error) {
+                result.innerHTML += `<p class="error">❌ Error al ejecutar renderTable: ${error.message}</p>`;
+            }
+        }
+        
+        function testLocalStorage() {
+            const result = document.getElementById('localstorage-test');
+            try {
+                // Probar guardar
+                localStorage.setItem('test', 'valor');
+                const retrieved = localStorage.getItem('test');
+                if (retrieved === 'valor') {
+                    result.innerHTML = '<p class="success">✅ LocalStorage funciona correctamente</p>';
+                } else {
+                    result.innerHTML = '<p class="error">❌ LocalStorage no funciona</p>';
+                }
+                localStorage.removeItem('test');
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error con LocalStorage: ${error.message}</p>`;
+            }
+        }
+        
+        // Ejecutar pruebas automáticamente
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar funciones globales
+            const globalTest = document.getElementById('global-functions-test');
+            const functionsToCheck = [
+                'openStatusModal', 'toggleFavorite', 'editFicha', 'openDeleteModal',
+                'handleFormSubmit', 'confirmDeleteFicha', 'confirmStatusChange'
+            ];
+            
+            functionsToCheck.forEach(funcName => {
+                if (typeof window[funcName] === 'function') {
+                    globalTest.innerHTML += `<p class="success">✅ ${funcName} - DEFINIDA</p>`;
+                } else {
+                    globalTest.innerHTML += `<p class="error">❌ ${funcName} - NO DEFINIDA</p>`;
+                }
+            });
+            
+            // Verificar elementos del DOM
+            const domTest = document.getElementById('dom-elements-test');
+            const elementsToCheck = [
+                'modal-overlay', 'fichas-tbody', 'fichas-activas', 
+                'fichas-inactivas', 'total-instructores'
+            ];
+            
+            elementsToCheck.forEach(elementId => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    domTest.innerHTML += `<p class="success">✅ ${elementId} - ENCONTRADO</p>`;
+                } else {
+                    domTest.innerHTML += `<p class="error">❌ ${elementId} - NO ENCONTRADO</p>`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

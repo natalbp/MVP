@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papelera - Gestión de Fichas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-database"></i>
+            </div>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item" data-page="inicio">
+                <a href="inicio.html" class="menu-link" title="Inicio">
+                    <i class="fas fa-home"></i>
+                    <span class="menu-text">Inicio</span>
+                </a>
+            </li>
+            <li class="menu-item" data-page="reportes">
+                <a href="reportes.html" class="menu-link" title="Reportes">
+                    <i class="fas fa-chart-bar"></i>
+                    <span class="menu-text">Reportes</span>
+                </a>
+            </li>
+            <li class="menu-item" data-page="fichas">
+                <a href="index.html" class="menu-link" title="Fichas">
+                    <i class="fas fa-folder"></i>
+                    <span class="menu-text">Fichas</span>
+                </a>
+            </li>
+            <li class="menu-item" data-page="comentarios">
+                <a href="comentarios.html" class="menu-link" title="Comentarios">
+                    <i class="fas fa-comments"></i>
+                    <span class="menu-text">Comentarios</span>
+                </a>
+            </li>
+            <li class="menu-item trash-item active" data-page="papelera">
+                <a href="papelera.html" class="menu-link" title="Papelera">
+                    <i class="fas fa-trash"></i>
+                    <span class="menu-text">Papelera</span>
+                </a>
+            </li>
+        </ul>
+        
+        <!-- Botón para colapsar menú -->
+        <button class="sidebar-toggle" id="sidebar-toggle">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>Papelera</h1>
+                <div class="header-icons">
+                    <div class="header-icon favorites-btn" id="favorites-btn" title="Favoritos">
+                        <i class="fas fa-heart"></i>
+                        <span class="favorites-count">0</span>
+                    </div>
+                    <div class="header-icon notification-btn" id="notification-btn" title="Notificaciones">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">0</span>
+                    </div>
+                    <div class="header-icon user-btn" id="user-btn" title="Perfil de usuario">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="week-indicator">THIS WEEK</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Notificaciones Toast -->
+        <div id="notifications" class="notifications"></div>
+
+        <!-- Panel de Notificaciones -->
+        <div class="notification-panel" id="notification-panel">
+            <div class="notification-header">
+                <h3>Notificaciones</h3>
+                <button class="clear-all-btn" id="clear-notifications">Limpiar todo</button>
+            </div>
+            <div class="notification-list" id="notification-list">
+                <div class="empty-favorites">
+                    <i class="fas fa-bell"></i>
+                    <p>No tienes notificaciones</p>
+                    <small>Las nuevas notificaciones aparecerán aquí</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de Favoritos -->
+        <div class="favorites-panel" id="favorites-panel">
+            <div class="favorites-header">
+                <h3>Favoritos</h3>
+                <button class="clear-favorites-btn" id="clear-favorites">Limpiar favoritos</button>
+            </div>
+            <div class="favorites-list" id="favorites-list">
+                <div class="empty-favorites">
+                    <i class="fas fa-heart"></i>
+                    <p>No tienes elementos favoritos aún</p>
+                    <small>Los elementos marcados como favoritos aparecerán aquí</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de Usuario -->
+        <div class="user-panel" id="user-panel">
+            <div class="user-panel-header">
+                <div class="user-info">
+                    <div class="user-avatar-large">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <h3 id="user-name">Carlos Rodríguez</h3>
+                        <p id="user-role">Administrador</p>
+                        <span class="user-status active" id="user-status">Activo</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="user-menu-options">
+                <div class="user-menu-item" id="user-profile-btn">
+                    <div class="menu-item-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="menu-item-content">
+                        <h4>Mi Perfil</h4>
+                        <p>Ver información personal</p>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+
+                <div class="user-menu-item" id="user-settings-btn" onclick="toggleSharedTheme()">
+                    <div class="menu-item-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="menu-item-content">
+                        <h4>Cambiar Tema</h4>
+                        <p>Alternar entre claro y oscuro</p>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+
+                <div class="user-menu-item" id="user-activity-btn">
+                    <div class="menu-item-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="menu-item-content">
+                        <h4>Actividad Reciente</h4>
+                        <p>Historial de acciones</p>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+
+                <div class="user-menu-item logout-item" id="logout-btn" onclick="window.location.href='login.html'">
+                    <div class="menu-item-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <div class="menu-item-content">
+                        <h4>Cerrar Sesión</h4>
+                        <p>Salir del sistema</p>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card trash-card">
+                    <div class="stat-icon trash-icon">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-eliminados">0</h3>
+                        <p>Total Eliminados</p>
+                    </div>
+                </div>
+                <div class="stat-card trash-card">
+                    <div class="stat-icon trash-icon">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="fichas-eliminadas">0</h3>
+                        <p>Fichas Eliminadas</p>
+                    </div>
+                </div>
+                <div class="stat-card trash-card">
+                    <div class="stat-icon trash-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="reportes-eliminados">0</h3>
+                        <p>Reportes Eliminados</p>
+                    </div>
+                </div>
+                <div class="stat-card trash-card">
+                    <div class="stat-icon trash-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="comentarios-eliminados">0</h3>
+                        <p>Comentarios Eliminados</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="filters-section">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="tipo-filter">Tipo</label>
+                    <select id="tipo-filter" class="filter-select">
+                        <option value="">Todos los tipos</option>
+                        <option value="Ficha">Ficha</option>
+                        <option value="Reporte">Reporte</option>
+                        <option value="Comentario">Comentario</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="usuario-filter">Usuario</label>
+                    <select id="usuario-filter" class="filter-select">
+                        <option value="">Todos los usuarios</option>
+                        <option value="Carlos Rodríguez">Carlos Rodríguez</option>
+                        <option value="Ana García">Ana García</option>
+                        <option value="Juan Pérez">Juan Pérez</option>
+                        <option value="María González">María González</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="origen-filter">Origen</label>
+                    <select id="origen-filter" class="filter-select">
+                        <option value="">Todos los orígenes</option>
+                        <option value="Fichas">Fichas</option>
+                        <option value="Reportes">Reportes</option>
+                        <option value="Comentarios">Comentarios</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="fecha-inicio">Fecha Inicio</label>
+                    <input type="date" id="fecha-inicio" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label for="fecha-fin">Fecha Fin</label>
+                    <input type="date" id="fecha-fin" class="filter-input">
+                </div>
+                <div class="filter-actions">
+                    <button class="btn-secondary" id="clear-filters">
+                        <i class="fas fa-times"></i> Limpiar
+                    </button>
+                    <button class="btn-primary trash-btn" id="apply-filters">
+                        <i class="fas fa-filter"></i> Aplicar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Table Section -->
+        <section class="table-section">
+            <div class="table-header">
+                <h2>Elementos Eliminados</h2>
+                <div class="table-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-input" placeholder="Buscar elementos eliminados...">
+                    </div>
+                    <button class="btn-secondary" id="grid-view-btn" title="Vista de cuadrícula">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="btn-secondary trash-btn" id="empty-trash-btn" title="Vaciar papelera">
+                        <i class="fas fa-broom"></i> Vaciar Papelera
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table id="fichas-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Nombre / Descripción</th>
+                            <th>Usuario</th>
+                            <th>Fecha Eliminación</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="papelera-tbody">
+                        <!-- Los elementos eliminados se cargarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Modal Confirmar Restauración -->
+        <div class="modal-overlay" id="restore-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Confirmar Restauración</h3>
+                    <button class="modal-close" id="restore-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="confirmation-content">
+                        <div class="confirmation-icon restore-icon">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                        <h4>¿Restaurar elemento?</h4>
+                        <p id="restore-message">¿Estás seguro de que quieres restaurar este elemento? Se devolverá a su ubicación original.</p>
+                        <div class="element-preview" id="restore-preview">
+                            <!-- Detalles del elemento a restaurar -->
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-restore-btn">Cancelar</button>
+                    <button type="button" class="btn-primary" id="confirm-restore-btn">
+                        <i class="fas fa-undo"></i> Restaurar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Confirmar Eliminación Permanente -->
+        <div class="modal-overlay" id="delete-permanent-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Confirmar Eliminación Permanente</h3>
+                    <button class="modal-close" id="delete-permanent-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="confirmation-content">
+                        <div class="confirmation-icon delete-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h4>¡Atención! Eliminación Permanente</h4>
+                        <p id="delete-permanent-message">Esta acción no se puede deshacer. El elemento será eliminado permanentemente del sistema.</p>
+                        <div class="element-preview" id="delete-permanent-preview">
+                            <!-- Detalles del elemento a eliminar -->
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-delete-permanent-btn">Cancelar</button>
+                    <button type="button" class="btn-primary trash-btn" id="confirm-delete-permanent-btn">
+                        <i class="fas fa-trash-alt"></i> Eliminar Permanentemente
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Ver Detalles -->
+        <div class="modal-overlay" id="view-details-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Detalles del Elemento</h3>
+                    <button class="modal-close" id="view-details-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="element-details">
+                    <!-- Los detalles del elemento se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Vaciar Papelera -->
+        <div class="modal-overlay" id="empty-trash-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>Vaciar Papelera</h3>
+                    <button class="modal-close" id="empty-trash-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="confirmation-content">
+                        <div class="confirmation-icon delete-icon">
+                            <i class="fas fa-broom"></i>
+                        </div>
+                        <h4>¡Atención! Vaciar Papelera Completa</h4>
+                        <p>Esta acción eliminará permanentemente TODOS los elementos de la papelera. Esta acción no se puede deshacer.</p>
+                        <div class="trash-summary" id="trash-summary">
+                            <!-- Resumen de elementos a eliminar -->
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-empty-trash-btn">Cancelar</button>
+                    <button type="button" class="btn-primary trash-btn" id="confirm-empty-trash-btn">
+                        <i class="fas fa-broom"></i> Vaciar Papelera
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="shared.js"></script>
+    <script src="papelera.js"></script>
+</body>
+</html>
